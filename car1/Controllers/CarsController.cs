@@ -19,7 +19,7 @@ namespace car1.Controllers
             _context = context;
         }
 
-        [JWTAction(allowedRoles: "Admin,User")]
+        [JWTAction(allowedRoles: "admin,customer")]
         // GET: Cars
         public async Task<IActionResult> Index(string searchQuery, string manufacturerId, string carType)
         {
@@ -30,6 +30,10 @@ namespace car1.Controllers
                                               .ToListAsync();
 
             var carTypes = await _context.CarTypes.ToListAsync();
+            var userType = HttpContext.Session.GetString("UserType");
+
+            // Pass the userType to the view
+            ViewData["UserType"] = userType;
 
             // Store in ViewData to populate the dropdowns
             ViewData["Manufacturers"] = manufacturers;
@@ -58,7 +62,7 @@ namespace car1.Controllers
         }
 
 
-        [JWTAction(allowedRoles: "Admin,User")]
+        [JWTAction(allowedRoles: "admin,customer")]
         // GET: Cars/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -79,7 +83,7 @@ namespace car1.Controllers
             return View(car);
         }
 
-        [JWTAction(allowedRoles: "Admin")]
+        [JWTAction(allowedRoles: "admin")]
 
         // GET: Cars/Create
         public IActionResult Create()
@@ -92,7 +96,7 @@ namespace car1.Controllers
         // POST: Cars/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [JWTAction(allowedRoles: "Admin")]
+        [JWTAction(allowedRoles: "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ManufacturerName,Model,Type,Engine,Bhp,Transmission,Mileage,Seat,AirBagDetails,BootSpace,Price,CarTypeId,CarTransmissionTypeId")] Car car)
@@ -109,7 +113,7 @@ namespace car1.Controllers
         }
 
         // GET: Cars/Edit/5
-        [JWTAction(allowedRoles: "Admin")]
+        [JWTAction(allowedRoles: "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -132,7 +136,7 @@ namespace car1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [JWTAction(allowedRoles: "Admin")]
+        [JWTAction(allowedRoles: "admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ManufacturerName,Model,Type,Engine,Bhp,Transmission,Mileage,Seat,AirBagDetails,BootSpace,Price,CarTypeId,CarTransmissionTypeId")] Car car)
         {
             if (id != car.Id)
@@ -166,7 +170,7 @@ namespace car1.Controllers
         }
 
         // GET: Cars/Delete/5
-        [JWTAction(allowedRoles: "Admin")]
+        [JWTAction(allowedRoles: "admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -189,7 +193,7 @@ namespace car1.Controllers
         // POST: Cars/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [JWTAction(allowedRoles: "Admin")]
+        [JWTAction(allowedRoles: "admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var car = await _context.Cars.FindAsync(id);
@@ -202,7 +206,7 @@ namespace car1.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [JWTAction(allowedRoles: "Admin")]
+        [JWTAction(allowedRoles: "admin,customer")]
         // GET: Cars/Search
         public async Task<IActionResult> Search(string searchQuery)
         {
@@ -218,7 +222,7 @@ namespace car1.Controllers
             return View(await cars.ToListAsync());
         }
 
-        [JWTAction(allowedRoles: "Admin")]
+        [JWTAction(allowedRoles: "admin,customer")]
         // GET: Cars/Filter
         public async Task<IActionResult> Filter(string? manufacturerId, string? carType)
         {

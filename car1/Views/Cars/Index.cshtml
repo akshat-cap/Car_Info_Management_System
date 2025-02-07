@@ -1,93 +1,173 @@
 ﻿@model IEnumerable<car1.Models.Car>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Car List";
+    var userType = ViewData["UserType"] as string;
 }
 
-<h1>Car List</h1>
+<!-- Custom CSS -->
+<style>
+    /* Fullscreen Video Background */
+    .video-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+    }
 
-<!-- Search and Filter Section -->
-<form method="get" action="@Url.Action("Index", "Cars")">
-    <div class="row">
-        <!-- Search Bar -->
-        <div class="col-md-4">
-            <label for="searchQuery">Search by Manufacturer or Model</label>
-            <input type="text" id="searchQuery" name="searchQuery" class="form-control" placeholder="Search..." value="@Context.Request.Query["searchQuery"]" />
-        </div>
+    /* Dark Overlay */
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+    }
 
-        <!-- Manufacturer Filter -->
-        <div class="col-md-4">
-            <label for="manufacturerId">Select Manufacturer</label>
-            <select name="manufacturerId" class="form-control">
-                <option value="">-- All Manufacturers --</option>
-                @foreach (var manufacturer in ViewData["Manufacturers"] as List<string>)
-                {
-                    <option value="@manufacturer" @@(manufacturer == Context.Request.Query["manufacturerId"]?.ToString() ? "selected" : "")>@manufacturer</option>
-                }
-            </select>
-        </div>
+    /* Centered Content */
+    .content-container {
+        position: relative;
+        z-index: 1;
+        padding: 30px;
+        color: white;
+    }
 
-        <!-- Car Type Filter -->
-        <div class="col-md-4">
-            <label for="carType">Select Car Type</label>
-            <select name="carType" class="form-control">
-                <option value="">-- All Car Types --</option>
-                @foreach (var type in ViewData["CarTypes"] as List<car1.Models.CarType>)
-                {
-                    <option value="@type.Type" @@(type.Type == Context.Request.Query["carType"]?.ToString() ? "selected" : "")>@type.Type</option>
-                }
-            </select>
-        </div>
-    </div>
+    /* Manufacturer Container */
+    .manufacturer-container {
+        /*background: rgba(255, 255, 255, 0.1);8*/
+        padding: 20px;
+        border-radius: 10px;
+       /* backdrop-filter: blur(10px);*/
+        color: white;
+        margin-bottom: 20px;
+    }
 
-    <button type="submit" class="btn btn-primary mt-3">Search & Filter</button>
-</form>
+    /* Card Styling */
+    .car-card {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        transition: 0.3s;
+    }
 
-<hr />
-
-<!-- Table of Cars -->
-<table class="table">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.ManufacturerName)</th>
-            <th>@Html.DisplayNameFor(model => model.Model)</th>
-            <th>@Html.DisplayNameFor(model => model.Type)</th>
-            <th>@Html.DisplayNameFor(model => model.Engine)</th>
-            <th>@Html.DisplayNameFor(model => model.Bhp)</th>
-            <th>@Html.DisplayNameFor(model => model.Transmission)</th>
-            <th>@Html.DisplayNameFor(model => model.Mileage)</th>
-            <th>@Html.DisplayNameFor(model => model.Seat)</th>
-            <th>@Html.DisplayNameFor(model => model.AirBagDetails)</th>
-            <th>@Html.DisplayNameFor(model => model.BootSpace)</th>
-            <th>@Html.DisplayNameFor(model => model.Price)</th>
-            <th>@Html.DisplayNameFor(model => model.CarTransmissionType)</th>
-            <th>@Html.DisplayNameFor(model => model.CarType)</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.ManufacturerName)</td>
-                <td>@Html.DisplayFor(modelItem => item.Model)</td>
-                <td>@Html.DisplayFor(modelItem => item.Type)</td>
-                <td>@Html.DisplayFor(modelItem => item.Engine)</td>
-                <td>@Html.DisplayFor(modelItem => item.Bhp)</td>
-                <td>@Html.DisplayFor(modelItem => item.Transmission)</td>
-                <td>@Html.DisplayFor(modelItem => item.Mileage)</td>
-                <td>@Html.DisplayFor(modelItem => item.Seat)</td>
-                <td>@Html.DisplayFor(modelItem => item.AirBagDetails)</td>
-                <td>@Html.DisplayFor(modelItem => item.BootSpace)</td>
-                <td>@Html.DisplayFor(modelItem => item.Price)</td>
-                <td>@Html.DisplayFor(modelItem => item.CarTransmissionType.Id)</td>
-                <td>@Html.DisplayFor(modelItem => item.CarType.Id)</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
+        .car-card:hover {
+            transform: scale(1.05);
         }
-    </tbody>
-</table>
+
+    /* Button Styling */
+    .btn-primary {
+        background: linear-gradient(90deg, #ff416c, #ff4b2b);
+        border: none;
+        font-weight: bold;
+    }
+
+    .edit-link {
+        color: #ffeb3b;
+    }
+
+    .details-link {
+        color: #00e676;
+    }
+
+    .delete-link {
+        color: #ff1744;
+    }
+
+</style>
+
+<!-- Video Background -->
+<video autoplay muted loop class="video-bg">
+    <source src="https://cdn.pixabay.com/video/2019/10/31/28543-370332702_large.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+<!-- Dark Overlay -->
+<div class="overlay"></div>
+
+<!-- Page Content -->
+<div class="container content-container">
+    <h1 class="text-center">Car List</h1>
+
+    <!-- Search and Filter Section -->
+    <form method="get" action="@Url.Action("Index", "Cars")" class="filter-box mt-4">
+        <div class="row">
+            <!-- Search Bar -->
+            <div class="col-md-4">
+                <label for="searchQuery">Search by Manufacturer or Model</label>
+                <input type="text" id="searchQuery" name="searchQuery" class="form-control" placeholder="Search..." value="@Context.Request.Query["searchQuery"]" />
+            </div>
+
+            <!-- Manufacturer Filter -->
+            <div class="col-md-4">
+                <label for="manufacturerId">Select Manufacturer</label>
+                <select name="manufacturerId" class="form-control">
+                    <option value="">-- All Manufacturers --</option>
+                    @foreach (var manufacturer in ViewData["Manufacturers"] as List<string>)
+                    {
+                        <option value="@manufacturer" selected="@((manufacturer == Context.Request.Query["manufacturerId"].ToString()) ? "selected" : "")">@manufacturer</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Car Type Filter -->
+            <div class="col-md-4">
+                <label for="carType">Select Car Type</label>
+                <select name="carType" class="form-control">
+                    <option value="">-- All Car Types --</option>
+                    @foreach (var type in ViewData["CarTypes"] as List<car1.Models.CarType>)
+                    {
+                        <option value="@type.Type" selected="@((type.Type == Context.Request.Query["carType"].ToString()) ? "selected" : "")">@type.Type</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Search & Filter</button>
+    </form>
+
+    <hr />
+
+    <!-- Group Cars by Manufacturer -->
+    @foreach (var manufacturerGroup in Model.GroupBy(c => c.ManufacturerName))
+    {
+        <div class="manufacturer-container">
+            <h2 class="text-center">@manufacturerGroup.Key</h2>
+
+            <div class="row">
+                @foreach (var car in manufacturerGroup)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="car-card p-3">
+                            <h4 class="text-center">@car.Model</h4>
+                            <p><strong>Type:</strong> @car.Type</p>
+                            <p><strong>Engine:</strong> @car.Engine</p>
+                            <p><strong>BhP:</strong> @car.Bhp</p>
+                            <p><strong>Transmission:</strong> @car.Transmission</p>
+                            <p><strong>Price:</strong> $@car.Price</p>
+
+                            <div class="text-center">
+                                <a asp-action="Details" asp-route-id="@car.Id" class="details-link">Details</a>
+                                @if (!string.Equals(userType?.Trim(), "customer", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    <a asp-action="Edit" asp-route-id="@car.Id" class="edit-link ml-2">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@car.Id" class="delete-link ml-2">Delete</a>
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
