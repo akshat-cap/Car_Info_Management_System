@@ -56,7 +56,7 @@ namespace car1.Controllers
 
                 // Redirect to the home page after login
                 ViewBag.Token = token;
-                return Redirect("/Home/Index");
+                return Redirect("/Cars/Index");
             }
             catch
             {
