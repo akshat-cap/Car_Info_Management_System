@@ -6,105 +6,150 @@
 
 <!-- Custom CSS -->
 <style>
-    body {
-        background-color: #f8f9fa;
-        font-family: Arial, sans-serif;
+    /* Video Background */
+    .video-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
     }
 
+    /* Overlay Effect */
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+    }
+
+    /* Login Container */
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    /* Glassmorphism Effect */
     .card {
-        border: none;
-        border-radius: 15px;
-        overflow: hidden;
+        width: 100%;
+        max-width: 450px;
+        border-radius: 12px;
+       /* backdrop-filter: blur(10px);*/
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #fff;
     }
 
     .card-header {
-        background: linear-gradient(90deg, #007bff, #0056b3);
+        /*background: rgba(0, 0, 0, 0.5);
+        border-bottom: none;*/
+        text-align: center;
+        padding: 20px;
     }
 
         .card-header h3 {
             margin: 0;
-            font-weight: 600;
+            font-weight: bold;
             letter-spacing: 1px;
         }
 
     .form-label {
-        font-weight: bold;
-        color: #343a40;
+        font-weight: 500;
+        color: #fff;
     }
 
     .form-control {
-        border: 1px solid #ced4da;
+        border: none;
         border-radius: 8px;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.3);
+        color: #fff;
     }
 
         .form-control:focus {
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.5);
+            color: #000;
         }
 
     .btn-primary {
-        background-color: #007bff;
+        background: linear-gradient(90deg, #007bff, #0056b3);
         border: none;
-        border-radius: 8px;
+        border-radius: 30px;
         font-weight: 600;
+        transition: 0.3s;
     }
 
         .btn-primary:hover {
-            background-color: #0056b3;
+            background: linear-gradient(90deg, #0056b3, #004494);
         }
 
-    .card-footer small {
+    .card-footer {
+        text-align: center;
         font-size: 0.9rem;
     }
 
-    .card-footer a {
-        font-weight: bold;
-    }
+        .card-footer a {
+            font-weight: bold;
+            color: #ffeb3b;
+        }
 </style>
 
+<!-- Video Background -->
+<video autoplay muted loop class="video-bg">
+    <source src="https://cdn.pixabay.com/video/2021/09/13/88481-606110665_large.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+<!-- Overlay -->
+<div class="overlay"></div>
+
 <!-- Login Form -->
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <!-- Card Container -->
-            <div class="card shadow-lg">
-                <div class="card-header text-white text-center py-3">
-                    <h3>Login</h3>
-                </div>
-                <div class="card-body p-4">
-                    <form asp-action="Index">
-                        <!-- Validation Summary -->
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+<div class="login-container">
+    <div class="card">
+        <div class="card-header">
+            <h3>Login</h3>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Index">
+                <!-- Validation Summary -->
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                        <!-- Username Field -->
-                        <div class="form-group mb-3">
-                            <label asp-for="Username" class="form-label">Username</label>
-                            <input asp-for="Username" class="form-control" placeholder="Enter your username" />
-                            <span asp-validation-for="Username" class="text-danger"></span>
-                        </div>
-
-                        <!-- Password Field -->
-                        <div class="form-group mb-3">
-                            <label asp-for="Password" class="form-label">Password</label>
-                            <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">Login</button>
-                        </div>
-                    </form>
+                <!-- Username Field -->
+                <div class="form-group mb-3">
+                    <label asp-for="Username" class="form-label">Username</label>
+                    <input asp-for="Username" class="form-control" placeholder="Enter your username" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
                 </div>
 
-                <!-- Card Footer -->
-                <!--<div class="card-footer text-center py-3">
-                    <small>
-                        Don't have an account?
-                        <a asp-action="Register" class="text-primary text-decoration-none">Register here</a>
-                    </small>
-                </div>-->
-            </div>
+                <!-- Password Field -->
+                <div class="form-group mb-3">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Card Footer -->
+        <div class="card-footer">
+            <small>
+                Don't have an account?
+                <a asp-action="Register" class="text-warning text-decoration-none">Register here</a>
+            </small>
         </div>
     </div>
 </div>
