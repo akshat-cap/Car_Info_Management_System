@@ -1,0 +1,116 @@
+﻿@model car1.Models.Login
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<!-- Custom CSS -->
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: Arial, sans-serif;
+    }
+
+    .card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        background: linear-gradient(90deg, #007bff, #0056b3);
+    }
+
+        .card-header h3 {
+            margin: 0;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+    .form-label {
+        font-weight: bold;
+        color: #343a40;
+    }
+
+    .form-control {
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+    }
+
+        .form-control:focus {
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            border-color: #007bff;
+        }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+    .card-footer small {
+        font-size: 0.9rem;
+    }
+
+    .card-footer a {
+        font-weight: bold;
+    }
+</style>
+
+<!-- Login Form -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <!-- Card Container -->
+            <div class="card shadow-lg">
+                <div class="card-header text-white text-center py-3">
+                    <h3>Login</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Index">
+                        <!-- Validation Summary -->
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <!-- Username Field -->
+                        <div class="form-group mb-3">
+                            <label asp-for="Username" class="form-label">Username</label>
+                            <input asp-for="Username" class="form-control" placeholder="Enter your username" />
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="form-group mb-3">
+                            <label asp-for="Password" class="form-label">Password</label>
+                            <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Card Footer -->
+                <!--<div class="card-footer text-center py-3">
+                    <small>
+                        Don't have an account?
+                        <a asp-action="Register" class="text-primary text-decoration-none">Register here</a>
+                    </small>
+                </div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

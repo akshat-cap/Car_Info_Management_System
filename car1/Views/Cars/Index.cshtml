@@ -1,0 +1,93 @@
+﻿@model IEnumerable<car1.Models.Car>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Car List</h1>
+
+<!-- Search and Filter Section -->
+<form method="get" action="@Url.Action("Index", "Cars")">
+    <div class="row">
+        <!-- Search Bar -->
+        <div class="col-md-4">
+            <label for="searchQuery">Search by Manufacturer or Model</label>
+            <input type="text" id="searchQuery" name="searchQuery" class="form-control" placeholder="Search..." value="@Context.Request.Query["searchQuery"]" />
+        </div>
+
+        <!-- Manufacturer Filter -->
+        <div class="col-md-4">
+            <label for="manufacturerId">Select Manufacturer</label>
+            <select name="manufacturerId" class="form-control">
+                <option value="">-- All Manufacturers --</option>
+                @foreach (var manufacturer in ViewData["Manufacturers"] as List<string>)
+                {
+                    <option value="@manufacturer" @@(manufacturer == Context.Request.Query["manufacturerId"]?.ToString() ? "selected" : "")>@manufacturer</option>
+                }
+            </select>
+        </div>
+
+        <!-- Car Type Filter -->
+        <div class="col-md-4">
+            <label for="carType">Select Car Type</label>
+            <select name="carType" class="form-control">
+                <option value="">-- All Car Types --</option>
+                @foreach (var type in ViewData["CarTypes"] as List<car1.Models.CarType>)
+                {
+                    <option value="@type.Type" @@(type.Type == Context.Request.Query["carType"]?.ToString() ? "selected" : "")>@type.Type</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Search & Filter</button>
+</form>
+
+<hr />
+
+<!-- Table of Cars -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.ManufacturerName)</th>
+            <th>@Html.DisplayNameFor(model => model.Model)</th>
+            <th>@Html.DisplayNameFor(model => model.Type)</th>
+            <th>@Html.DisplayNameFor(model => model.Engine)</th>
+            <th>@Html.DisplayNameFor(model => model.Bhp)</th>
+            <th>@Html.DisplayNameFor(model => model.Transmission)</th>
+            <th>@Html.DisplayNameFor(model => model.Mileage)</th>
+            <th>@Html.DisplayNameFor(model => model.Seat)</th>
+            <th>@Html.DisplayNameFor(model => model.AirBagDetails)</th>
+            <th>@Html.DisplayNameFor(model => model.BootSpace)</th>
+            <th>@Html.DisplayNameFor(model => model.Price)</th>
+            <th>@Html.DisplayNameFor(model => model.CarTransmissionType)</th>
+            <th>@Html.DisplayNameFor(model => model.CarType)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.ManufacturerName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Model)</td>
+                <td>@Html.DisplayFor(modelItem => item.Type)</td>
+                <td>@Html.DisplayFor(modelItem => item.Engine)</td>
+                <td>@Html.DisplayFor(modelItem => item.Bhp)</td>
+                <td>@Html.DisplayFor(modelItem => item.Transmission)</td>
+                <td>@Html.DisplayFor(modelItem => item.Mileage)</td>
+                <td>@Html.DisplayFor(modelItem => item.Seat)</td>
+                <td>@Html.DisplayFor(modelItem => item.AirBagDetails)</td>
+                <td>@Html.DisplayFor(modelItem => item.BootSpace)</td>
+                <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                <td>@Html.DisplayFor(modelItem => item.CarTransmissionType.Id)</td>
+                <td>@Html.DisplayFor(modelItem => item.CarType.Id)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

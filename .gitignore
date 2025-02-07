@@ -1,0 +1,9 @@
+.vs/
+car1/bin/
+car1/obj/
+car1/*.user
+car1/*.suo
+car1/*.log
+car1/*.tmp
+ 
+ 
